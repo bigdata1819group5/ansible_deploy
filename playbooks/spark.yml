@@ -1,0 +1,48 @@
+- hosts: servers
+
+  tasks:
+    - name: ensure docker network exists
+      docker_network:
+        name: decluster_network
+
+    - name: run spark master instances
+      docker_container:
+        name: spark-master
+        image: bde2020/spark-master:2.4.1-hadoop2.7
+        ports:
+          - "8080:8080"
+          - "7077:7077"
+        volumes:
+          - /data/spark:/data/spark
+        env:
+          ENABLE_INIT_DAEMON: "false"
+        networks_cli_compatible: yes
+        networks:
+          - name: decluster_network
+            aliases:
+              - spark-master
+
+    - name: run spark worker instances
+      docker_container:
+        name: "{{ item.name }}"
+        image: bde2020/spark-worker:2.4.1-hadoop2.7
+        ports:
+          - "{{ item.port }}:8081"
+        volumes:
+          - /data/spark:/data/spark
+        env:
+          ENABLE_INIT_DAEMON: "false"
+          SPARK_MASTER: "spark://spark-master:7077"
+        networks_cli_compatible: yes
+        networks:
+          - name: decluster_network
+            aliases:
+              - "{{ item.name }}"
+      with_items:
+        - name: spark-worker-1
+          port: 18081
+        - name: spark-worker-2
+          port: 28081
+        - name: spark-worker-3
+          port: 38081
+          

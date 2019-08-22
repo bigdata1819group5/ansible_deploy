@@ -1,0 +1,8 @@
+- hosts: servers
+
+  tasks:
+    - name: create a series of directories with even numbers for some reason
+      file:
+        dest: "/tmp/{{ item }}"
+        state: directory
+      with_sequence: start=4 end=16 stride=2

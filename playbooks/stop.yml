@@ -1,0 +1,20 @@
+- hosts: servers
+
+  tasks:
+    - name: stop containers
+      docker_container:
+        name: "{{ item }}"
+        state: stopped
+      with_items:
+        - cassandra-1
+        - cassandra-2
+        - spark-digest
+        - spark-worker-1
+        - spark-worker-2
+        - spark-worker-3
+        - spark-master
+        - zookeeper-1
+        - kafka-1
+        - kafka-2
+        - schema-registry
+        - kafka-restapi

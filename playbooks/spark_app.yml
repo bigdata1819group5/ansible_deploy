@@ -1,0 +1,31 @@
+- hosts: servers
+
+  tasks:
+    - name: get spark digest app from git
+      git:
+        repo: git@github.com:bigdata1819group5/data_digest.git
+        dest: "{{ setup_stage }}/spark_digest"
+
+    - name: build spark digest app image
+      docker_image:
+        path: "{{ setup_stage }}/spark_digest"
+        name: spark-digest
+        pull: no
+        debug: yes
+
+    - name: ensure docker network exists
+      docker_network:
+        name: decluster_network
+
+    - name: run spark master instances
+      docker_container:
+        name: spark-digest
+        image: spark-digest
+          - /data/spark:/data/spark
+        env:
+          ENABLE_INIT_DAEMON: "false"
+          SPARK_APPLICATION_ARGS: "kafka-1:19092 carlocate sparkGroup"
+        networks:
+          - name: decluster_network
+            aliases:
+              - spark-digest

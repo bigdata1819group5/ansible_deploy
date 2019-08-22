@@ -1,0 +1,3 @@
+restart policy: always
+fix spark digest app deploy config
+wirte readme

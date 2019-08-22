@@ -1,0 +1,49 @@
+- hosts: servers
+
+  tasks:
+    - name: ensure docker network exists
+      docker_network:
+        name: decluster_network
+
+    - name: run cassandra instance
+      docker_container:
+        name: "{{ item.name }}"
+        image: cassandra:3
+        volumes:
+          - "/data/cassandra/{{ item.label }}:/var/lib/cassandra"
+        env:
+          CASSANDRA_SEEDS: cassandra-1
+          # CASSANDRA_BROADCAST_ADDRESS: cassandra-1 ! use system ip for seperate machines
+        networks_cli_compatible: yes
+        networks:
+          - name: decluster_network
+            aliases:
+              - "{{ item.name }}"
+      with_items:
+        - name: cassandra-1
+          label: 1
+        - name: cassandra-2
+          label: 2
+
+    - name: make necessary dir
+      file:
+        path: "{{ setup_stage }}/scripts"
+        state: directory
+
+    - name: copy setup script to server
+      copy:
+        src: "../scripts/cassandra_setup.cql"
+        dest: "{{ setup_stage}}/scripts/cassandra_setup.cql"
+
+    - name: create cassandra tables
+      docker_container:
+        name: cassandra-worker
+        image: cassandra:3
+        volumes:
+          - "{{ setup_stage }}/scripts:/var/decluster/scripts"
+        command: "cqlsh cassandra-1:7001 -f /var/decluster/scripts/cassandra_setup.cql"
+        networks_cli_compatible: yes
+        networks:
+          - name: decluster_network
+            aliases:
+              - cassandra-worker

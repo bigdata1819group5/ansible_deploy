@@ -1,0 +1,5 @@
+[servers]
+deserver
+
+[servers:vars]
+setup_stage=/home/db/setup_stage
