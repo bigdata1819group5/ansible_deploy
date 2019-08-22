@@ -16,5 +16,6 @@
         - zookeeper-1
         - kafka-1
         - kafka-2
+        - kafka-3
         - schema-registry
         - kafka-restapi

@@ -47,6 +47,9 @@
         - name: kafka-2
           id: 2
           port: 29092
+        - name: kafka-3
+          id: 3
+          port: 39092
 
     - name: run schema registery
       docker_container:
@@ -70,7 +73,7 @@
           - 8000:8082
         env:
           KAFKA_REST_HOST_NAME: kafka-restapi
-          KAFKA_REST_BOOTSTRAP_SERVERS: 'kafka-1:19092,kafka-2:29092'
+          KAFKA_REST_BOOTSTRAP_SERVERS: "kafka-1:19092,kafka-2:29092,kafka-3:39092"
           KAFKA_REST_LISTENERS: "http://0.0.0.0:8082"
           KAFKA_REST_SCHEMA_REGISTRY_URL: 'http://schema-registry:8081'
         networks:
