@@ -11,6 +11,8 @@
         image: cassandra:3
         volumes:
           - "/data/cassandra/{{ item.label }}:/var/lib/cassandra"
+        ports:
+          - "{{ item.port }}:9042"
         env:
           CASSANDRA_SEEDS: cassandra-1
           # CASSANDRA_BROADCAST_ADDRESS: cassandra-1 ! use system ip for seperate machines
@@ -22,8 +24,10 @@
       with_items:
         - name: cassandra-1
           label: 1
+          port: 9042
         - name: cassandra-2
           label: 2
+          port: 9043
 
     - name: make necessary dir
       file:
