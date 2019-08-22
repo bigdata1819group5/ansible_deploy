@@ -41,7 +41,7 @@
         image: cassandra:3
         volumes:
           - "{{ setup_stage }}/scripts:/var/decluster/scripts"
-        command: "cqlsh cassandra-1:7001 -f /var/decluster/scripts/cassandra_setup.cql"
+        command: "cqlsh cassandra-1 -f /var/decluster/scripts/cassandra_setup.cql"
         networks_cli_compatible: yes
         networks:
           - name: decluster_network
