@@ -12,7 +12,8 @@ CREATE TABLE IF NOT EXISTS streaming.vehicles_by_tileid (
     tile_id text,
     id text,
     time timestamp,
+    time_id timestamp,
     longitude double,
     latitude double,
-    PRIMARY KEY (tile_id, id)
+    PRIMARY KEY ((tile_id, time_id), id, time)
 );
