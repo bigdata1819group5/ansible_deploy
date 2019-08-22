@@ -11,7 +11,7 @@
         name: spark-digest
         build:
           path: "{{ setup_stage }}/spark_digest"
-        pull: no
+          pull: no
         source: build
         force_source: yes
 
@@ -33,6 +33,7 @@
           DIGEST_KAFKA_SERVERS: kafka-1:19092,kafka-2:29092,kafka-3:39092
           DIGEST_CONSUMER_GROUP_ID: DigestGroup
           DIGEST_TOPICS: vehiclelocation
+        networks_cli_compatible: yes
         networks:
           - name: decluster_network
             aliases:
