@@ -1,0 +1,17 @@
+- hosts: servers
+docker run -d -p 8000:8000 -p 9000:9000 -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer
+  tasks:
+    - name: ensure docker network exists
+      docker_network:
+        name: decluster_network
+
+    - name: run portainer
+      docker_container:
+        name: portainer
+        image: portainer/portainer
+        ports:
+          - "8888:8000"
+          - "9999:9000"
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /data/portainer:/data
