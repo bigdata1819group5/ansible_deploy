@@ -34,6 +34,7 @@
           DIGEST_KAFKA_SERVERS: kafka-1:19092,kafka-2:29092,kafka-3:39092
           DIGEST_CONSUMER_GROUP_ID: DigestGroup
           DIGEST_TOPICS: vehiclelocation
+          DIGEST_HADOOP_NAMENODE: hdfs://namenode:8020
         networks_cli_compatible: yes
         networks:
           - name: decluster_network
