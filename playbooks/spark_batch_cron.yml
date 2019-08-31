@@ -14,6 +14,11 @@
           pull: no
         source: build
         force_source: yes
+
+    - name: make necessary dir
+      file:
+        path: "{{ setup_stage}}/envfiles"
+        state: directory
     
     - name: copy env file to server
       copy:
