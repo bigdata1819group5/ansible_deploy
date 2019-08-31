@@ -1,0 +1,43 @@
+- hosts: servers
+
+  tasks:
+    - name: get git repo
+      git:
+        repo: git@github.com:bigdata1819group5/data_extraction.git
+        dest: "{{ setup_stage }}/data_extraction"
+
+    - name: build image
+      docker_image:
+        name: data-extraction
+        build:
+          path: "{{ setup_stage }}/data_extraction"
+          pull: no
+        source: build
+        force_source: yes
+
+    - name: ensure redis is running
+      docker_container:
+        name: redis
+        image: redis
+        restart_policy: always
+        volumes:
+          - /data/redis:/data
+        networks_cli_compatible: yes
+        networks:
+          - name: decluster_network
+            aliases: 
+              - redis
+
+    - name: run data extraction app
+      docker_container:
+        name: data-extraction
+        image: data-extraction
+        env:
+          REDIS_BACKEND: redis://redis:6379
+          KAFKA_BROKER: kafka-3:39092
+          JOB_PERIOD: "60"
+        networks_cli_compatible: yes
+        networks:
+          - name: decluster_network
+            aliases:
+              - data-extraction
