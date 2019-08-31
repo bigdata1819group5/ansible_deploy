@@ -1,0 +1,28 @@
+- hosts: servers
+
+  tasks:
+    - name: get spark batch app from git
+      git:
+        repo: git@github.com:bigdata1819group5/batch_process.git
+        dest: "{{ setup_stage }}/batch_process"
+
+    - name: build spark batch process app image
+      docker_image:
+        name: spark-batch
+        build:
+          path: "{{ setup_stage }}/batch_process"
+          pull: no
+        source: build
+        force_source: yes
+    
+    - name: copy env file to server
+      copy:
+        src: "../envfiles/spark_batch"
+        dest: "{{ setup_stage}}/envfiles/spark_batch"
+
+    - name: Make cron job to run batch processing periodically
+      cron:
+        name: "Run spark batch processing"
+        minute: "0"
+        hour: "23"
+        job: "docker run --rm --env-file {{ setup_stage}}/envfiles/spark_batch --network decluster_network spark-batch"
