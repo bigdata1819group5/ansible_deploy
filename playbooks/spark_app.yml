@@ -35,6 +35,7 @@
           DIGEST_CONSUMER_GROUP_ID: DigestGroup
           DIGEST_TOPICS: vehiclelocation
           DIGEST_HADOOP_NAMENODE: hdfs://namenode:8020
+          DIGEST_CORES_MAX: "8"
         networks_cli_compatible: yes
         networks:
           - name: decluster_network
